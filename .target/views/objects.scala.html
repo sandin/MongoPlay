@@ -1,0 +1,38 @@
+@(message:String, query: String, dbname: String, collectionName: String, list: List[ItemObject] )
+
+
+
+@main("Welcome to Play 2.0") {
+    <script>
+    $(function() {
+        $( "#accordion" ).accordion({
+        	 heightStyle: "content",
+        	 active: false,
+        	 collapsible: true
+        });
+    });
+    </script>
+    
+    
+    <h1><a href="/collections/@dbname">[^]</a>@dbname/@collectionName</h1>
+    
+    <form action="" method="get">
+	    <textarea name="q" cols="80" rows="5">@query</textarea>
+	    <input type="submit" value="search" />
+    </form>
+    @if(message != null) {
+    <p style="color: red">@message</p>
+    }
+    
+    <div id="accordion">
+    @for(item <- list) {
+        <h3>@item.getName() (@item.getCount())</h3>
+        <div>
+        @for(field <- item.getChildren()) {
+            <p>@field.getName() : @field.getValue()</p>
+        }
+        </div>
+    } 
+    </div>
+    
+}

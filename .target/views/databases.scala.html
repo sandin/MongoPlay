@@ -1,0 +1,15 @@
+@(dbConfig: DbConfig, list: List[Node] )
+
+@main("Welcome to Play 2.0") {
+    
+    
+    <h1><a href="/">[^]</a>@dbConfig.domain:@dbConfig.port</h1>
+    
+    
+    <ul>
+    @for(item <- list) {
+        <li><a href="/collections/@item.getName()">@item.getName() (@item.getCount())</a></li>
+    } 
+    </ul>
+    
+}

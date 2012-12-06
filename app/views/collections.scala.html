@@ -1,0 +1,15 @@
+@(dbname: String, list: List[Node] )
+
+@main("Welcome to Play 2.0") {
+    
+    
+    <h1><a href="/databases">[^]</a>@dbname</h1>
+    
+    
+    <ul>
+    @for(item <- list) {
+        <li><a href="/objects/@dbname/@item.getName()">@item.getName() (@item.getCount())</a></li>
+    } 
+    </ul>
+    
+}
