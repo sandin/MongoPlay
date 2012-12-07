@@ -45,6 +45,7 @@ public class MongdbHelper {
 			morphia = new Morphia();
 //			datastore = morphia.createDatastore(mongo, Config.MONGDB_NAME);
 			log.info("connect to mongodb " + host + ":" + port);
+			mongo.getDatabaseNames(); // throw Exception?
 			return mongo;
 		} catch (Exception e) {
 			e.printStackTrace();

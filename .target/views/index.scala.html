@@ -1,4 +1,4 @@
-@(dbConfigForm: Form[DbConfig])
+@(message: String, dbConfigForm: Form[DbConfig])
 
 @main("Welcome to Play 2.0") {
     
@@ -11,6 +11,7 @@
         <input type="submit" value="Login" />
     
     }
+    <p class="error">@message</p>
     </div>
     
 }

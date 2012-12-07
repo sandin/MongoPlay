@@ -2,13 +2,41 @@
 
 @main("Welcome to Play 2.0") {
     
+    <script>
+    $(window).load(function() {
+    	console.log(123);
+    	
+    $('.deleteBtn').click(function(){
+         var sure = confirm("Do you want to Delete this Collection?"),
+         url = $(this).attr("href"),
+         $li = $(this).parent();
+         if (sure) {
+        	 $.get(url, function(data){
+        		 console.log(data);
+        		 if (data && data.status) {
+        			 alert("成功删除");
+        			 $li.remove();
+        		 } else {
+        			 alert("删除失败: " + data.message);
+        		 }
+        	 });
+        	 return false;
+         }
+         return false;
+    });
+    	
+    	
+    });
+    </script>
     
     <h1><a href="/databases">[^]</a>@dbname</h1>
     
     
     <ul>
     @for(item <- list) {
-        <li><a href="/objects/@dbname/@item.getName()">@item.getName() (@item.getCount())</a></li>
+        <li><a href="/objects/@dbname/@item.getName()">@item.getName() (@item.getCount())</a> 
+            &nbsp;&nbsp;<a class="deleteBtn" href="/collections/delete/@dbname/@item.getName()">[x]</a>
+        </li>
     } 
     </ul>
     

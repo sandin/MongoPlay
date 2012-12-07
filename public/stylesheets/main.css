@@ -559,3 +559,21 @@ table {
 	width: 970px;
 	margin: 0 auto;
 }
+
+.error {
+	font-weight: bold;
+	color: red;
+}
+
+.pager {
+	padding: 20px;
+	font-size: 16px;
+	text-align: right;
+}
+
+.pager a {
+	background: #888;
+	color: white;
+    border: 1px solid #eee;
+    padding: 5px;
+}

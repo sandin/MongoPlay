@@ -6,7 +6,9 @@
 GET     /                           controllers.Application.index()
 GET     /databases                  controllers.Application.databases()
 GET     /collections/:dbname        controllers.Application.collections(dbname: String)
+GET     /collections/delete/:dbname/:collectionName controllers.Application.dropCollection(dbname: String, collectionName: String)
 GET     /objects/:dbname/:collectionName controllers.Application.objects(dbname: String, collectionName: String)
+GET     /objects/delete/:dbname/:collectionName/:objectId controllers.Application.objectsDelete(dbname: String, collectionName: String, objectId: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
