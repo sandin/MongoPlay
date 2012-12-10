@@ -577,3 +577,17 @@ table {
     border: 1px solid #eee;
     padding: 5px;
 }
+
+.siderbar {
+	width: 20%;
+	float: left;
+}
+.main {
+	width: 79%;
+	float: right;
+}
+.obj_body p {
+	margin: 2px 0;
+}
+
+html, body { height:100%; }

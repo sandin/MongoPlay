@@ -32,15 +32,20 @@
     <div id="accordion">
     @for(item <- list) {
         <h3>@item.getName() (@item.getCount()) - @item.getObjectId()</h3>
-        <div>
+        <div class="obj_body">
             <div class="toolbar" style="border-bottom: 1px dashed #ccc; padding-bottom: 5px;">
                 <a href="/objects/update/dbname/collection/_id">[Update]</a> | 
                 <a href="/objects/delete/dbname/collection/_id">[Delete]</a>
                 @item.getObjectIdBase64()
             </div>
-        @for(field <- item.getChildren()) {
-            <p>@field.getName() : @field.getValue()</p>
-        }
+            <table width="100%">
+	        @for(field <- item.getChildren()) {
+	        <tr>
+	            <td>@field.getName()</td>
+	            <td>@field.getValue()</td>
+	        </tr>
+	        }
+            </table>
         </div>
     } 
     </div>
