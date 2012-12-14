@@ -6,8 +6,12 @@
     <div style="width:300px; background: #eee; border: 1px solid #000; padding: 20px; margin: 100px auto;">
     <h3>MongoPlay</h3>
     @helper.form(action = routes.Application.databases()) {
-        <input type="text" name="domain" value="127.0.0.1" /> : <input type="text" name="port" value="27017" style="width:40px" />
-    
+    <p>
+        <input type="text" name="domain" value="127.0.0.1" /> : <input type="text" name="port" value="27017" style="width:50px" />
+    </p>
+    <p>
+        <input type="text" name="user" value="admin" /> : <input type="password" name="password" value="" style="width:50px" />
+    </p>
         <input type="submit" value="Login" />
     
     }

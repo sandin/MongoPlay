@@ -6,14 +6,23 @@
     $(window).load(function() {
     	console.log(123);
     	
+    	/*
     $('.collections').click(function() {
     	var url = $(this).attr("href"),
     	   $iframe = $('#f');
     	
     	console.log(url, $iframe);
-    	$iframe.attr('src', url);
+    	$.ajax({
+    		url: url,
+    		success: function(data) {
+    			//console.log(data);
+    		    $('#play').html(data);
+    		}
+    	});
+    	//$iframe.attr('src', url);
     	return false;
     });
+    	*/
     	
     $('.deleteBtn').click(function(){
          var sure = confirm("Do you want to Delete this Collection?"),
@@ -38,11 +47,8 @@
     });
     </script>
     
-    <div class="clearfix" >
-        <div class="siderbar">
     
     <h1><a href="/databases">[^]</a>@dbname</h1>
-    
     
     <ul>
     @for(item <- list) {
@@ -52,11 +58,5 @@
     } 
     </ul>
     
-        </div>
-        
-        <div class="main">
-            <iframe id="f" src="" width="100%" height="100%"></iframe>
-        </div>
-    </div>
     
 }

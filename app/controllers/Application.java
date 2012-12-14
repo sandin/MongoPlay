@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import com.lds.mongo.db.MongdbHelper;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.QueryBuilder;
@@ -48,8 +50,15 @@ public class Application extends Controller {
             dbConfig = new DbConfig();
             dbConfig.domain = session("host");
             dbConfig.port = Integer.parseInt(session("port"));
+            dbConfig.user = session("user");
+            dbConfig.password = session("password");
         }
         System.out.println("dbConfig: " + dbConfig.domain + ":" + dbConfig.port);
+        
+        if (! login(dbConfig.user, dbConfig.password)) {
+            flash("message", "错误的用户名/密码!");
+            return redirect("/");
+        }
         
         MongdbHelper dbHelper = new MongdbHelper(dbConfig.domain, dbConfig.port);
         Mongo mongo = dbHelper.connect();
@@ -57,7 +66,7 @@ public class Application extends Controller {
         session("port", dbConfig.port+"");
         
         if (mongo == null) {
-            flash("message", "无法连接到数据库");
+            flash("message", "无法连接到数据库!");
             return redirect("/");
         }
         
@@ -72,6 +81,10 @@ public class Application extends Controller {
     }
     
     public static Result collections(String dbname) {
+        if (! isLogined()) {
+            return redirect("/");
+        }
+        
         String host = session("host");
         int port = Integer.parseInt(session("port"));
         
@@ -127,7 +140,7 @@ public class Application extends Controller {
         
         Mongo mongo = getMongo();
         DB db = mongo.getDB(dbname);
-        DBCollection collection = db.getCollection(dbname);
+        DBCollection collection = db.getCollection(collectionName);
         
         System.out.println("objectId: " + objectId);
         DBObject query = new BasicDBObject();
@@ -136,22 +149,40 @@ public class Application extends Controller {
         System.out.println("oid: " + oid.getMachine());
         System.out.println("oid: " + oid.getInc());
         query.put("_id", oid);
-        DBObject obj = collection.findOne(query);
+        DBObject obj = collection.findOne(oid);
+        
         if (obj == null) {
             result.put("message", objectId + " 不存在!");
             result.put("status", false);
         } else {
-            Iterator<String> it = obj.keySet().iterator();
-            while (it.hasNext()) {
-                String name = it.next();
-                Object value = obj.get(name);
-                System.out.println(name + " : " + value);
-            }
+            System.out.println("delete obj: " + obj);
+            collection.remove(obj); 
         }
         return ok(result);
     }
+    
+    public static boolean isLogined() {
+        return session("user") != null;
+    }
+    
+    public static boolean login(String user, String password) {
+        System.out.println(user + " login, use password.");
+        String pass = DbConfig.users.get(user);
+        System.out.println("input password: " + password);
+        System.out.println("real password: " + pass);
+        boolean successed = (pass != null && pass.equals(password));
+        if (successed) { // save it into session 
+            session("user", user);
+            session("password", password);
+        }
+        return successed;
+    }
 
     public static Result objects(String dbname, String collectionName) {
+        if (! isLogined()) {
+            return redirect("/");
+        }
+        
         String host = session("host");
         int port = Integer.parseInt(session("port"));
         
@@ -167,6 +198,20 @@ public class Application extends Controller {
         DynamicForm form = new DynamicForm();
         DynamicForm params = form.bindFromRequest();
         String query = params.get("q");
+        String pageNum = params.get("page");
+        Integer page = 1;
+        int pageSize = 20;
+        if (pageNum != null) {
+            try {
+                page = Integer.parseInt(pageNum);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                // page = 1
+            }
+            if (page <= 0) {
+                page = 1;
+            }
+        }
         
         String message = null;
         DBObject ref = null;
@@ -181,13 +226,17 @@ public class Application extends Controller {
         
         List<ItemObject> list = null;
         if (ref != null) {
-            list = itemCollection.findChildren(1, 50, ref);
+            list = itemCollection.findChildren(page, pageSize, ref);
         } else {
-            list = itemCollection.getChildren(1, 50);
+            list = itemCollection.getChildren(page, pageSize);
+        }
+        System.out.println("list: " + list);
+        
+        if (list == null || list.size() == 0) {
+            list = new ArrayList<ItemObject>();
         }
         
-        System.out.println("list: " + list);
-        return ok(objects.render(message, query, dbname, collectionName, (List<ItemObject>)list));
+        return ok(objects.render(message, query, dbname, collectionName, (List<ItemObject>)list, page));
     }
 
 }
