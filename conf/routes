@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index()
+GET     /logout                     controllers.Application.logout()
 GET     /databases                  controllers.Application.databases()
 GET     /collections/:dbname        controllers.Application.collections(dbname: String)
 GET     /collections/delete/:dbname/:collectionName controllers.Application.dropCollection(dbname: String, collectionName: String)

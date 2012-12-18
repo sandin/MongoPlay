@@ -41,6 +41,11 @@ public class Application extends Controller {
         String message = flash("message");
         return ok(index.render(message, dbConfigForm));
     }
+
+    public static Result logout() {
+        session().clear();
+        return redirect("/");
+    }
     
     public static Result databases() {
         Form<DbConfig> dbConfigForm = form(DbConfig.class).bindFromRequest();
